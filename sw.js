@@ -6,7 +6,7 @@ const SHELL = ['./', 'index.html', 'theme.css', 'styles.css', 'app.js', 'site-co
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => {
   const mine = (k) => k.startsWith('shell-') && k.endsWith(`:${self.registration.scope}`);
-  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => (mine(k) && k !== CACHE) || k === 'rosedene-shell-v1').map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => mine(k) && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', (e) => {
   const u = new URL(e.request.url);
