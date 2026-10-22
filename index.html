@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Per-house values in this <head> (see CLONING.md): theme-color, apple-mobile-web-app-title, <title> -->
+<meta name="theme-color" content="#D6D0C6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rosedene">
+<title>Rosedene Task Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alata&family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="locked">
+
+<!-- Passcode gate (only used once the shared database is configured) -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <img class="gate-logo" data-site-logo src="icons/logo.jpg" alt="" width="480" height="440">
+    <h2 data-site-title></h2>
+    <form id="gateForm" autocomplete="off">
+      <label for="gateCode">Enter passcode</label>
+      <input id="gateCode" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="••••••" autocomplete="off" required>
+      <button class="btn btn-primary" type="submit">Enter</button>
+    </form>
+    <p class="gate-msg" id="gateMsg" role="status"></p>
+    <button class="btn btn-ghost" id="gateCreate" type="button" hidden>Create a new board with this passcode</button>
+  </div>
+</div>
+
+<header class="top">
+  <div class="top-row">
+    <div class="brand">
+      <img class="logo" data-site-logo src="icons/logo.jpg" alt="" width="480" height="440">
+      <h1 data-site-title></h1>
+    </div>
+    <button class="btn btn-primary" id="addBtn" type="button">+ New task</button>
+  </div>
+  <div class="top-row sub">
+    <label class="me">
+      <span>I'm</span>
+      <select id="meSelect" aria-label="Who are you?"></select>
+    </label>
+    <span class="sync" id="sync" title="Sync status"></span>
+    <label class="me room-filter">
+      <select id="roomFilter" aria-label="Filter by room"></select>
+    </label>
+    <div class="filters" id="filters" role="group" aria-label="Filter by person"></div>
+    <button class="btn btn-ghost" id="peopleBtn" type="button">Manage</button>
+  </div>
+</header>
+
+<div class="viewbar" role="group" aria-label="View">
+  <button type="button" class="view-btn on" id="viewBoard" data-view="board">Board</button>
+  <button type="button" class="view-btn" id="viewCal" data-view="cal">Calendar</button>
+</div>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Stages"></nav>
+
+<main class="board" id="board"></main>
+
+<section class="cal" id="cal">
+  <div class="cal-nav">
+    <button type="button" class="btn btn-ghost" id="calPrev" aria-label="Previous month">‹</button>
+    <h2 id="calTitle"></h2>
+    <button type="button" class="btn btn-ghost" id="calNext" aria-label="Next month">›</button>
+    <button type="button" class="btn btn-ghost" id="calToday">Today</button>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+  <div class="cal-day" id="calDay"></div>
+</section>
+
+<!-- Task sheet -->
+<div class="overlay" id="overlay" hidden>
+  <form class="sheet" id="taskForm" autocomplete="off">
+    <div class="sheet-head">
+      <h2 id="sheetTitle">New task</h2>
+      <button type="button" class="icon-btn" id="closeSheet" aria-label="Close">×</button>
+    </div>
+
+    <div class="sheet-body">
+      <label class="field">
+        <span>Task name</span>
+        <input type="text" id="fTitle" required maxlength="120" placeholder="e.g. Paint lounge walls">
+      </label>
+
+      <label class="field">
+        <span>Details</span>
+        <textarea id="fDetails" rows="4" placeholder="Notes, measurements, materials, blockers…"></textarea>
+      </label>
+
+      <label class="field">
+        <span>Target completion date</span>
+        <input type="date" id="fDue">
+      </label>
+
+      <div class="field">
+        <span>Assigned to</span>
+        <div class="chips" id="fPeople"></div>
+      </div>
+
+      <div class="field">
+        <span>Priority</span>
+        <div class="chips" id="fPriority"></div>
+      </div>
+
+      <div class="field">
+        <span>Room</span>
+        <div class="chips" id="fRooms"></div>
+      </div>
+
+      <div class="field" id="stageField">
+        <span>Stage</span>
+        <div class="stage-pick" id="fStage"></div>
+      </div>
+
+      <div class="field">
+        <span>Photos</span>
+        <div class="photos" id="fPhotos"></div>
+        <label class="btn btn-ghost file-btn">
+          + Add photos
+          <input type="file" id="fPhotoInput" accept="image/*" multiple hidden>
+        </label>
+      </div>
+
+      <div class="field">
+        <span>Links</span>
+        <div class="links" id="fLinks"></div>
+        <div class="link-add">
+          <input type="url" id="fLinkUrl" placeholder="https://…" inputmode="url">
+          <input type="text" id="fLinkLabel" placeholder="Label (optional)">
+          <button type="button" class="btn btn-ghost" id="addLink">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
+</div>
+
+<!-- People sheet -->
+<div class="overlay" id="peopleOverlay" hidden>
+  <div class="sheet small">
+    <div class="sheet-head">
+      <h2>People &amp; Rooms</h2>
+      <button type="button" class="icon-btn" id="closePeople" aria-label="Close">×</button>
+    </div>
+    <div class="sheet-body">
+      <h3 class="list-title">People</h3>
+      <ul class="people-list" id="peopleList"></ul>
+      <form class="link-add" id="personForm">
+        <input type="text" id="personName" placeholder="Add a person" maxlength="24" required>
+        <button class="btn btn-primary" type="submit">Add</button>
+      </form>
+
+      <h3 class="list-title">Rooms</h3>
+      <ul class="people-list" id="roomList"></ul>
+      <form class="link-add" id="roomForm">
+        <input type="text" id="roomName" placeholder="Add a room or area" maxlength="24" required>
+        <button class="btn btn-primary" type="submit">Add</button>
+      </form>
+      <div class="backup">
+        <button type="button" class="btn btn-ghost" id="lockBtn" hidden>Lock this device</button>
+        <button type="button" class="btn btn-ghost" id="exportBtn">Export backup</button>
+        <label class="btn btn-ghost file-btn">Import backup
+          <input type="file" id="importInput" accept="application/json" hidden>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Photo viewer -->
+<div class="overlay viewer" id="viewer" hidden><img id="viewerImg" alt=""></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  // If the app can't start (for example a broken site-config.js) say so instead of showing a dead passcode box.
+  setTimeout(function () {
+    if (document.body.dataset.ready) return;
+    var m = document.getElementById('gateMsg');
+    if (m) m.textContent = 'The app failed to load. Please refresh the page.';
+  }, 8000);
+</script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

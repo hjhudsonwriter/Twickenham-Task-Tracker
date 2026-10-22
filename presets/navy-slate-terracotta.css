@@ -1,0 +1,86 @@
+/* =====================================================================
+   PRESET: dark navy (main) + slate grey (accent 2) + terracotta (accent 1)
+   A dark theme. To use it:  cp presets/navy-slate-terracotta.css theme.css
+   Then set <meta name="theme-color"> in index.html and background_color / theme_color
+   in manifest.webmanifest to --main (#1B2A45). See CLONING.md.
+
+   How the palette is used
+   ----------------------------------------------------------------
+   --main*        page + header + sheet background, columns, calendar days
+   --accent*      primary accent (buttons, "started" stage, today marker)
+   --accent2*     secondary accent (tags, chips, "completed" stage)
+   --text*        text that sits ON --main / --main-soft  (light here, because --main is dark)
+   --ink*         text that sits on LIGHT surfaces (cards, inputs, white buttons)
+   --surface      light surfaces (inputs, ghost buttons, tabs, calendar days with tasks)
+   --trim         the thin lines that finish edges (white)
+   Text on dark fills (tags, "started"/"completed" headers) is always --white, so keep
+   --accent-deep, --accent2, --accent2-deep and --danger dark enough for white text.
+   Check readability with:  python3 tools/check-contrast.py theme.css
+   styles.css contains no colour values of its own: everything comes from this file.
+   ===================================================================== */
+:root {
+  color-scheme: dark;       /* form controls are kept light separately in styles.css */
+
+  /* ---- Page ---- */
+  --main: #1B2A45;          /* dark navy */
+  --main-soft: #243558;
+  --main-deep: #35476B;
+  --surface: #FFFFFF;
+  --surface-alt: #E8ECF2;
+  --trim: #FFFFFF;
+  --white: #FFFFFF;
+
+  /* ---- Text ---- */
+  --text: #F4F0E8;          /* on navy */
+  --text-soft: #AEB9CC;
+  --ink: #1B2A45;           /* on light surfaces */
+  --ink-soft: #4C586E;
+  --card-text-soft: #435067;
+
+  /* ---- Accent 1 (terracotta) ---- */
+  --accent: #D9805F;
+  --accent-soft: #EFD0C3;
+  --accent-deep: #B04F32;
+  --accent-ink: #98391F;
+  --on-accent: #1B2A45;
+
+  /* ---- Accent 2 (slate grey) ---- */
+  --accent2: #5E6E83;
+  --accent2-deep: #4B596B;
+  --accent2-mid: #A7B2C1;
+  --accent2-on-main: #A9B8CC;
+
+  /* ---- Alerts ---- */
+  --danger: #AE3F2A;
+  --danger-on-main: #F19A85;
+
+  /* ---- Stage colours ---- */
+  --stage-todo-head: #EFD0C3;      --stage-todo-head-text: #1B2A45;      --stage-todo-card: #F9ECE6;      --stage-todo-edge: #D9805F;
+  --stage-assigned-head: #D9805F;  --stage-assigned-head-text: #1B2A45;  --stage-assigned-card: #F3D9CD;  --stage-assigned-edge: #D9805F;
+  --stage-started-head: #B04F32;   --stage-started-head-text: #FFFFFF;   --stage-started-card: #EFCABA;   --stage-started-edge: #B04F32;
+  --stage-part-head: #A7B2C1;      --stage-part-head-text: #1B2A45;      --stage-part-card: #E1E6ED;      --stage-part-edge: #5E6E83;
+  --stage-done-head: #5E6E83;      --stage-done-head-text: #FFFFFF;      --stage-done-card: #D8DFE8;      --stage-done-edge: #5E6E83;
+
+  /* ---- Misc ---- */
+  --card-rim: rgba(255,255,255,.85);
+  --tag-meta-bg: rgba(255,255,255,.65);
+  --scrim: rgba(8,14,28,.62);
+  --scrim-btn: rgba(27,42,69,.8);
+  --toast-bg: #F4F0E8;
+  --toast-text: #1B2A45;
+  --toast-shadow: 0 6px 18px rgba(0,0,0,.45);   /* the cream toast needs an edge over white surfaces */
+  --card-shadow: 0 1px 2px rgba(0,0,0,.18);
+  --viewer-scrim: rgba(8,14,28,.92);
+  --sel-ring: #CF7553;               /* selected day: 3:1+ on both the navy day cell and the white one */
+
+  /* ---- Logo on a dark page: show it on a white tile ---- */
+  --logo-blend: normal;
+  --logo-bg: #FFFFFF;
+  --logo-radius: 10px;
+
+  /* ---- Shape + type (same as the original) ---- */
+  --radius: 10px;
+  --font-head: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-ui: "Alata", "Inter", -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-body: "Inter", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
