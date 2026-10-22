@@ -9,10 +9,10 @@ Want a copy for another house? See [`CLONING.md`](CLONING.md). House-specific se
 The app syncs through Google Firebase **Firestore** on the free *Spark* plan (no billing details required).
 Until you complete this, the app still works but only saves on the device you're using.
 
-1. Go to <https://console.firebase.google.com> → **Add project** → name it `richmond83` (turn Google Analytics off).
+1. Go to <https://console.firebase.google.com> → **Add project** → name it `richmond-road` (turn Google Analytics off).
 2. In the project: **Build → Firestore Database → Create database**. Choose a UK/EU location (e.g. `europe-west2`) and start in **production mode**.
 3. Open the **Rules** tab, replace the contents with the rules below and **Publish**.
-4. **Project settings (cog) → General → Your apps → Web (`</>`)** → register an app called `richmond83` (no hosting needed). Copy the `firebaseConfig` values it shows.
+4. **Project settings (cog) → General → Your apps → Web (`</>`)** → register an app called `richmond-road` (no hosting needed). Copy the `firebaseConfig` values it shows.
 5. Paste them into `firebase-config.js`, commit and push.
 6. If you host on GitHub Pages: repo **Settings → Pages → Deploy from branch**. Then in Firebase **Authentication → Settings → Authorized domains** isn't needed (we don't use Auth), so you're done.
 
